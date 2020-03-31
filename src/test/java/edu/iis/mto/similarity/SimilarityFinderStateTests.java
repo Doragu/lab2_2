@@ -11,6 +11,7 @@ public class SimilarityFinderStateTests {
     private final static int[] ORIGIN_SEQUENCE = {1, 2, 3};
     private final static int[] SEQUENCE_ONE_DIFF_ELEM = {1, 2, 4};
     private final static int[] SEQUENCE_ONE_SAME_ELEM = {1, -5, 4};
+    private final static int[] SEQUENCE_ALL_DIFF_ELEM = {0, 11, -33};
 
     private SequenceSearcher sequenceSearcher;
     private SimilarityFinder similarityFinder;
@@ -39,7 +40,9 @@ public class SimilarityFinderStateTests {
     }
 
     @Test void testSequencesWithZeroSameElements() {
+        final double EXPECTED_RESULT = 0.0;
 
+        Assertions.assertEquals(similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, SEQUENCE_ALL_DIFF_ELEM), EXPECTED_RESULT);
     }
 
     @Test void testWithTwoEmptySequences() {
