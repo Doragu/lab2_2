@@ -47,7 +47,13 @@ public class SimilarityFinderBehaviorTests {
     }
 
     @Test void testWithNullSequenceSearcher() {
+        final int seq1[] = {2, 1}, seq2[] = {1, 2};
 
+        similarityFinder = new SimilarityFinder(null);
+
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        });
     }
 
 }
