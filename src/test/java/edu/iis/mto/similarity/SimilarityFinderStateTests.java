@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 public class SimilarityFinderStateTests {
 
     private final static int[] ORIGIN_SEQUENCE = {1, 2, 3};
+    private final static int[] SEQUENCE_ONE_DIFF_ELEM = {1, 2, 4};
 
     private SequenceSearcher sequenceSearcher;
     private SimilarityFinder similarityFinder;
@@ -19,11 +20,15 @@ public class SimilarityFinderStateTests {
     }
 
     @Test void testTwoIdenticalSequences() {
-        Assertions.assertEquals(similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, ORIGIN_SEQUENCE.clone()), 1);
+        final double EXPECTED_RESULT = 1.00;
+
+        Assertions.assertEquals(similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, ORIGIN_SEQUENCE.clone()), EXPECTED_RESULT);
     }
 
     @Test void testSequencesWithOneDifferentElement() {
+        final double EXPECTED_RESULT = 0.5;
 
+        Assertions.assertEquals(similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, SEQUENCE_ONE_DIFF_ELEM), EXPECTED_RESULT);
     }
 
     @Test void testSequencesWithOneSameElement() {
