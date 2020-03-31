@@ -53,6 +53,8 @@ public class SimilarityFinderStateTests {
     }
 
     @Test void testWithOneEmptySequence() {
+        final double EXPECTED_RESULT = 0.0;
 
+        Assertions.assertEquals(similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, EMPTY_SEQUENCE), EXPECTED_RESULT);
     }
 }

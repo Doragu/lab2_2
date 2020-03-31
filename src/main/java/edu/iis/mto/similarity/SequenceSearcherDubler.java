@@ -9,7 +9,7 @@ public class SequenceSearcherDubler implements SequenceSearcher {
 
     public SearchResult search(int elem, int[] seq) {
 
-        if (seq == null || seq.length == 0) {
+        if (seq == null) {
             throw new IllegalArgumentException();
         }
 
