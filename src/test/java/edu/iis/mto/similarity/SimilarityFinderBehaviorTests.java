@@ -39,7 +39,11 @@ public class SimilarityFinderBehaviorTests {
     }
 
     @Test void testWithTwoEmptySequences() {
+        final int seq1[] = {}, seq2[] = {};
 
+        Assertions.assertDoesNotThrow(() -> {
+            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        });
     }
 
     @Test void testWithNullSequenceSearcher() {
