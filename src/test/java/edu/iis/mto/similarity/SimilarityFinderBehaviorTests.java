@@ -26,7 +26,7 @@ public class SimilarityFinderBehaviorTests {
     @Test void testWithOneNullSequence() {
         final int seq1[] = {1, 2, 3}, seq2[] = null;
 
-        Assertions.assertThrows(NullPointerException.class, () -> {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
             similarityFinder.calculateJackardSimilarity(seq1, seq2);
         });
     }
