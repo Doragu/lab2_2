@@ -7,10 +7,11 @@ import org.junit.jupiter.api.Test;
 
 public class SimilarityFinderBehaviorTests {
 
+    private SequenceSearcherDubler sequenceSearcher;
     private SimilarityFinder similarityFinder;
 
     @BeforeEach void createNewSequenceSearcher() {
-        SequenceSearcher sequenceSearcher = new SequenceSearcherDubler();
+        sequenceSearcher = new SequenceSearcherDubler();
         similarityFinder = new SimilarityFinder(sequenceSearcher);
     }
 
@@ -54,6 +55,14 @@ public class SimilarityFinderBehaviorTests {
         Assertions.assertThrows(NullPointerException.class, () -> {
             similarityFinder.calculateJackardSimilarity(seq1, seq2);
         });
+    }
+
+    @Test void testIfSequenceSearcherDublerWasUsed() {
+        final int seq1[] = {2, 1}, seq2[] = {1, 2};
+
+        similarityFinder.calculateJackardSimilarity(seq1, seq2);
+
+        Assertions.assertNotEquals(sequenceSearcher.getTimesUsedCounter(), 0);
     }
 
 }
