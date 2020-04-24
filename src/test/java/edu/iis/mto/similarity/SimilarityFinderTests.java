@@ -11,34 +11,43 @@ public class SimilarityFinderTests {
     private final static int[] SEQUENCE_ONE_SAME_ELEM = {1, -5, 4};
     private final static int[] SEQUENCE_ALL_DIFF_ELEM = {0, 11, -33};
     private final static int[] EMPTY_SEQUENCE = {};
+    private final static int[] NULL_SEQUENCE = null;
 
-    private SequenceSearcherDubler sequenceSearcher;
     private SimilarityFinder similarityFinder;
+    private SequenceSearcherDubler sequenceSearcher;
 
-    @BeforeEach void createNewSequenceSearcher() {
+    @BeforeEach void initialize() {
         sequenceSearcher = new SequenceSearcherDubler();
         similarityFinder = new SimilarityFinder(sequenceSearcher);
     }
 
     @Test void testTwoIdenticalSequences() {
+        sequenceSearcher.setArgs(new int[] {0, 1, 2});
+
         final double EXPECTED_RESULT = 1.00;
 
         Assertions.assertEquals(similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, ORIGIN_SEQUENCE.clone()), EXPECTED_RESULT);
     }
 
     @Test void testSequencesWithOneDifferentElement() {
+        sequenceSearcher.setArgs(new int[] {0, 1, -1});
+
         final double EXPECTED_RESULT = 0.5;
 
         Assertions.assertEquals(similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, SEQUENCE_ONE_DIFF_ELEM), EXPECTED_RESULT);
     }
 
     @Test void testSequencesWithOneSameElement() {
+        sequenceSearcher.setArgs(new int[] {0, -1, -1});
+
         final double EXPECTED_RESULT = 0.2;
 
         Assertions.assertEquals(similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, SEQUENCE_ONE_SAME_ELEM), EXPECTED_RESULT);
     }
 
     @Test void testSequencesWithZeroSameElements() {
+        sequenceSearcher.setArgs(new int[] {-1, -1, -1});
+
         final double EXPECTED_RESULT = 0.0;
 
         Assertions.assertEquals(similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, SEQUENCE_ALL_DIFF_ELEM), EXPECTED_RESULT);
@@ -57,51 +66,39 @@ public class SimilarityFinderTests {
     }
 
     @Test void testIfThrowsExceptionWithTwoNullSequences() {
-        final int seq1[] = null, seq2[] = null;
-
         Assertions.assertThrows(NullPointerException.class, () -> {
-            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+            similarityFinder.calculateJackardSimilarity(NULL_SEQUENCE, NULL_SEQUENCE);
         });
     }
 
     @Test void testIfThrowsExceptionWithOneNullSequence() {
-        final int seq1[] = {1, 2, 3}, seq2[] = null;
-
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+            similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, NULL_SEQUENCE);
         });
     }
 
     @Test void testIfThrowsExceptionWithTwoFilledSequences() {
-        final int seq1[] = {1, 2, 3}, seq2[] = {2, 0, -4};
-
         Assertions.assertDoesNotThrow(() -> {
-            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+            similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, SEQUENCE_ALL_DIFF_ELEM);
         });
     }
 
     @Test void testIfThrowsExceptionWithTwoEmptySequences() {
-        final int seq1[] = {}, seq2[] = {};
-
         Assertions.assertDoesNotThrow(() -> {
-            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+            similarityFinder.calculateJackardSimilarity(EMPTY_SEQUENCE, EMPTY_SEQUENCE);
         });
     }
 
     @Test void testIfThrowsExceptionWithNullSequenceSearcher() {
-        final int seq1[] = {2, 1}, seq2[] = {1, 2};
-
         similarityFinder = new SimilarityFinder(null);
 
         Assertions.assertThrows(NullPointerException.class, () -> {
-            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+            similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, SEQUENCE_ONE_DIFF_ELEM);
         });
     }
 
     @Test void testIfSequenceSearcherDublerWasUsed() {
-        final int seq1[] = {2, 1}, seq2[] = {1, 2};
-
-        similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        similarityFinder.calculateJackardSimilarity(SEQUENCE_ALL_DIFF_ELEM, SEQUENCE_ONE_SAME_ELEM);
 
         Assertions.assertNotEquals(sequenceSearcher.getTimesUsedCounter(), 0);
     }

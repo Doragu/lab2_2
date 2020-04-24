@@ -5,7 +5,13 @@ import edu.iis.mto.search.SequenceSearcher;
 
 public class SequenceSearcherDubler implements SequenceSearcher {
 
+    private int[] args;
+
     private int timesCalledCounter = 0;
+
+    public void setArgs(int[] args) {
+        this.args = args;
+    }
 
     public SearchResult search(int elem, int[] seq) {
 
@@ -13,20 +19,20 @@ public class SequenceSearcherDubler implements SequenceSearcher {
             throw new IllegalArgumentException();
         }
 
-        timesCalledCounter++;
         SearchResult.Builder builder = SearchResult.builder();
-        int i = 0;
+
+        int key = -1;
+        if (args != null && args.length > 0) {
+            key = args[timesCalledCounter];
+        }
 
         builder.withFound(false);
-
-        for (int item : seq) {
-            if (item == elem) {
-                builder.withPosition(i);
-                builder.withFound(true);
-                break;
-            }
-            i++;
+        if (key != -1) {
+            builder.withFound(true);
+            builder.withPosition(key);
         }
+
+        timesCalledCounter++;
 
         return builder.build();
     }
