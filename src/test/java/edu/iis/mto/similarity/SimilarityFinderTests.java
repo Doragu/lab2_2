@@ -1,12 +1,10 @@
 package edu.iis.mto.similarity;
 
-import edu.iis.mto.search.SearchResult;
-import edu.iis.mto.search.SequenceSearcher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class SimilarityFinderStateTests {
+public class SimilarityFinderTests {
 
     private final static int[] ORIGIN_SEQUENCE = {1, 2, 3};
     private final static int[] SEQUENCE_ONE_DIFF_ELEM = {1, 2, 4};
@@ -14,7 +12,7 @@ public class SimilarityFinderStateTests {
     private final static int[] SEQUENCE_ALL_DIFF_ELEM = {0, 11, -33};
     private final static int[] EMPTY_SEQUENCE = {};
 
-    private SequenceSearcher sequenceSearcher;
+    private SequenceSearcherDubler sequenceSearcher;
     private SimilarityFinder similarityFinder;
 
     @BeforeEach void createNewSequenceSearcher() {
@@ -56,5 +54,55 @@ public class SimilarityFinderStateTests {
         final double EXPECTED_RESULT = 0.0;
 
         Assertions.assertEquals(similarityFinder.calculateJackardSimilarity(ORIGIN_SEQUENCE, EMPTY_SEQUENCE), EXPECTED_RESULT);
+    }
+
+    @Test void testIfThrowsExceptionWithTwoNullSequences() {
+        final int seq1[] = null, seq2[] = null;
+
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        });
+    }
+
+    @Test void testIfThrowsExceptionWithOneNullSequence() {
+        final int seq1[] = {1, 2, 3}, seq2[] = null;
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        });
+    }
+
+    @Test void testIfThrowsExceptionWithTwoFilledSequences() {
+        final int seq1[] = {1, 2, 3}, seq2[] = {2, 0, -4};
+
+        Assertions.assertDoesNotThrow(() -> {
+            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        });
+    }
+
+    @Test void testIfThrowsExceptionWithTwoEmptySequences() {
+        final int seq1[] = {}, seq2[] = {};
+
+        Assertions.assertDoesNotThrow(() -> {
+            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        });
+    }
+
+    @Test void testIfThrowsExceptionWithNullSequenceSearcher() {
+        final int seq1[] = {2, 1}, seq2[] = {1, 2};
+
+        similarityFinder = new SimilarityFinder(null);
+
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            similarityFinder.calculateJackardSimilarity(seq1, seq2);
+        });
+    }
+
+    @Test void testIfSequenceSearcherDublerWasUsed() {
+        final int seq1[] = {2, 1}, seq2[] = {1, 2};
+
+        similarityFinder.calculateJackardSimilarity(seq1, seq2);
+
+        Assertions.assertNotEquals(sequenceSearcher.getTimesUsedCounter(), 0);
     }
 }
